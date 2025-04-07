@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Prediction</title>
+    <style>
+        /* Aquí puedes añadir algunos estilos básicos */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .status-container {
+            margin-top: 20px;
+        }
+        .status-box {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .status-box h3 {
+            margin: 0;
+        }
+        .status-box p {
+            font-size: 16px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Motor Prediction Dashboard</h1>
+
+    <!-- Nuevo formulario para cambiar IP y puerto -->
+    <div class="status-container">
+        <h2>Change Modbus Server Details</h2>
+        <form id="modbusForm">
+            <label for="ip">IP Address:</label>
+            <input type="text" id="ip" name="ip" placeholder="192.168.68.54" required>
+            <br>
+            <label for="port">Port:</label>
+            <input type="number" id="port" name="port" value="502" required>
+            <br>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+
+    <div class="status-container">
+        <div id="emergencyStatus" class="status-box">
+            <h3>Emergency Stop Status:</h3>
+            <p id="emergencyStatusText">Loading...</p>
+        </div>
+        <div id="systemStatus" class="status-box">
+            <h3>System Status:</h3>
+            <p id="systemStatusText">Loading...</p>
+        </div>
+    </div>
+
+    <div class="status-container">
+        <div id="potentiometerValues" class="status-box">
+            <h3>Potentiometer Values:</h3>
+            <p id="airTemperature">Air temperature: Loading...</p>
+            <p id="processTemperature">Process temperature: Loading...</p>
+            <p id="rotationalSpeed">Rotational speed: Loading...</p>
+            <p id="torque">Torque: Loading...</p>
+            <p id="toolWear">Tool wear: Loading...</p>
+        </div>
+    </div>
+
+    <div class="status-container">
+        <div id="predictionResult" class="status-box">
+            <h3>Prediction:</h3>
+            <p id="predictionText">Loading...</p>
+        </div>
+        <div id="toolWearMessage" class="status-box">
+            <h3>Message:</h3>
+            <p id="toolWearMessageText">Loading...</p>
+        </div>
+    </div>
+
+    <script>
+        let ip = '192.168.68.54'; // Valor por defecto
+        let port = 502; // Valor por defecto
+
+        // Manejar el formulario para cambiar IP y puerto
+        document.getElementById('modbusForm').addEventListener('submit', (event) => {
+            event.preventDefault(); // Evitar recargar la página
+            ip = document.getElementById('ip').value;
+            port = document.getElementById('port').value;
+            alert(`IP updated to: ${ip} and Port updated to: ${port}`);
+        });
+
+        // Función para actualizar los valores
+        function updateData() {
+            fetch(`/update_data?ip=${ip}&port=${port}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar el estado del paro de emergencia
+                    document.getElementById('emergencyStatusText').textContent = data.emergency_stop_status;
+                    document.getElementById('emergencyStatus').className = 'status-box ' + (data.emergency_stop_status === 'ACTIVE' ? 'success' : 'error');
+
+                    // Actualizar el estado del sistema
+                    document.getElementById('systemStatusText').textContent = data.system_status;
+                    document.getElementById('systemStatus').className = 'status-box ' + (data.system_status === 'ON' ? 'success' : 'error');
+
+                    // Mostrar los valores de los potenciometros
+                    document.getElementById('airTemperature').textContent = `Air temperature: ${data.air_temperature} K`;
+                    document.getElementById('processTemperature').textContent = `Process temperature: ${data.process_temperature} K`;
+                    document.getElementById('rotationalSpeed').textContent = `Rotational speed: ${data.rotational_speed} rpm`;
+                    document.getElementById('torque').textContent = `Torque: ${data.torque} Nm`;
+                    document.getElementById('toolWear').textContent = `Tool wear: ${data.tool_wear} min`;
+
+                    // Actualizar la predicción
+                    document.getElementById('predictionText').textContent = data.prediction;
+                    document.getElementById('predictionResult').className = 'status-box ' + (data.prediction === 'Failure' ? 'error' : 'success');
+
+                    // Actualizar el mensaje sobre el desgaste de la herramienta
+                    document.getElementById('toolWearMessageText').textContent = data.message;
+
+                    // Solo mostrar el mensaje emergente si se detecta una falla y el paro de emergencia NO está activado
+                    if (data.prediction === "Failure" && data.emergency_stop_status !== "ACTIVE") {
+                        alert("Possible failure detected! Activate emergency stop.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        // Actualizar cada 1 segundos
+        setInterval(updateData, 1000);
+        updateData();  // Llamar la función una vez al inicio
+    </script>
+
+</body>
+</html>
+
