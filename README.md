@@ -64,7 +64,7 @@ The Jupyter Notebook is responsible for:
 
 
 ## **Folder Structure**
-
+```
 Prototype/
 ├── my-project-backend/        # Contains the Flask backend, models, and notebooks
 │   ├── app.py                 # Main Python file (Flask application)
@@ -81,5 +81,5 @@ Prototype/
 ├── start_project.py           # Python script to start Flask and React
 ├── README.md                  # Project documentation
 
-
+```
 ---
