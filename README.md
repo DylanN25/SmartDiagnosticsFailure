@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # AI-Driven-Predictive
 This project predicts machine failures using the AI4I 2020 dataset. It integrates TPOT for model optimization, SMOTE for data balancing, and React+Flask for real-time data interaction, with visualizations provided by a Jupyter Notebook.
 =======
@@ -66,19 +65,7 @@ The Jupyter Notebook is responsible for:
 
 ## **Folder Structure**
 
-Prototype/
-├── my-project-backend/        # Contains the Flask backend, models, and notebooks
-│   ├── app.py                 # Main Python file (Flask application)
-│   ├── models/                # Contains the trained model, preprocessor, and encoder files
-│   ├── notebooks/             # Jupyter Notebook for training and analysis
-│   ├── templates/             # HTML templates for the Flask app
-│   ├── requirements.txt       # Python dependencies
-├── my-project-reactapp/          # React frontend
-│   ├── public/                # Static assets
-│   ├── src/                   # React components and logic
-│   ├── package.json           # Node.js dependencies
-├── start_project.py           # Python script to start Flask and React
-├── README.md                  # Project documentation
+Prototype/ ├── my-project-backend/        # Contains the Flask backend, models, and notebooks │   ├── app.py                 # Main Python file (Flask application) │   ├── models/                # Contains the trained model, preprocessor, and encoder files │   ├── notebooks/             # Jupyter Notebook for training and analysis │   ├── templates/             # HTML templates for the Flask app │   ├── requirements.txt       # Python dependencies ├── my-project-reactapp/          # React frontend │   ├── public/                # Static assets │   ├── src/                   # React components and logic │   ├── package.json           # Node.js dependencies ├── start_project.py           # Python script to start Flask and React ├── README.md                  # Project documentation
 
 
 
